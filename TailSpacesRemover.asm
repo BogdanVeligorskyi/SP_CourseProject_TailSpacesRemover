@@ -5,10 +5,11 @@ StdOut proto :DWORD
 StdIn proto :DWORD, :DWORD
 CutTailSpaces proto :DWORD
 CopyStrings proto: DWORD
+PreparingProc proto: DWORD
 
 ; db (1 Byte) = BYTE
 ; dw (2 Bytes) = WORD
-; dd (4 butes) = DWORD
+; dd (4 Bytes) = DWORD
 
 .data ;секцiя даних програми
 introString db "Tail Spaces Remover. 2021. Veligorskyi B.O., KI-191.", 0
@@ -24,25 +25,16 @@ string2 db 60 dup(0)
 .code ;секцiя коду програми
 start:
 
-invoke StdOut, ADDR introString
-invoke StdOut, ADDR Crlf
-invoke StdOut, ADDR enterString
-invoke StdIn, ADDR string1, maxLength
-;invoke StdOut, ADDR zeroByte
-
-lea EBX, string1
-mov byte ptr [EBX+EAX], 13
-mov byte ptr [EBX+EAX+1], 10
-mov byte ptr [EBX+EAX+2], 0
-mov enteredBytes, EAX
-invoke CutTailSpaces, ADDR string1
-invoke CopyStrings, ADDR string1
-invoke StdOut, ADDR noTailString
-invoke StdOut, ADDR string2
-invoke StdOut, ADDR zeroByte
-invoke StdOut, ADDR Crlf
-
-inkey "Натиснiть кнопку"
+invoke StdOut, ADDR introString			;?нформац?я про розробника
+invoke StdOut, ADDR Crlf				;перех?д на новий рядок
+invoke StdOut, ADDR enterString			;"Введ?ть рядок:"
+invoke StdIn, ADDR string1, maxLength	;введення рядка користувачем
+invoke PreparingProc, ADDR string1		;
+invoke CutTailSpaces, ADDR string1		;вилучення хвостових проб?л?в з рядка
+invoke CopyStrings, ADDR string1		;коп?ювання рядка
+invoke StdOut, ADDR noTailString		;"Рядок без хвостових проб?л?в:"
+inkey ADDR string2
+inkey "Натиснiть будь-яку кнопку для виходу з програми"
 invoke ExitProcess, 0
 
 ;процедура CutTailSpaces - вилучення хвостових проб?л?в з введеного рядка
@@ -60,7 +52,7 @@ CutTailSpaces PROC sz :DWORD
 	ret
 CutTailSpaces endp
 
-;процедура CopyStrings - коп?ювання рядка без хвостових проб?л?в (string1) у новий (string2)
+;процедура CopyStrings - коп?ювання рядка без хвостових пробiлiв (string1) у новий (string2)
 CopyStrings PROC sz :DWORD
 	lea EBX, string1
 	sub EDX, EBX
@@ -76,5 +68,14 @@ CopyStrings PROC sz :DWORD
 	stop1:
 	ret
 CopyStrings endp
+
+PreparingProc PROC sz:DWORD
+	lea EBX, string1
+	mov byte ptr [EBX+EAX], 13
+	mov byte ptr [EBX+EAX+1], 10
+	mov byte ptr [EBX+EAX+2], 0
+	mov enteredBytes, EAX
+	ret
+PreparingProc endp
 
 end start
