@@ -1,73 +1,75 @@
+; Велiгорський Б.О., КI-191
+; ВАРIАНТ 5
+; ЗАВДАННЯ: Процедура одержує як параметр адресу sz-рядка1.
+; 			У ньому є заздалегiдь невiдоме число хвостових пробiлiв.
+;			Скопiювати в другий рядок2 рядок1 без хвостових пробiлiв,
+;			результат роботи показати на екранi.
+
 include \masm32\include\masm32rt.inc
 
-;прототипи процедур
+; прототипи процедур
 StdOut proto :DWORD
 StdIn proto :DWORD, :DWORD
 CutTailSpaces proto :DWORD
 CopyStrings proto: DWORD
 
-; db (1 Byte) = BYTE
-; dw (2 Bytes) = WORD
-; dd (4 Bytes) = DWORD
-
-.data ;секцiя даних програми
+; секцiя даних програми
+.data
 introString db "Tail Spaces Remover. 2021. Veligorskyi B.O., KI-191.", 0
 enterString db "Введiть рядок (string1): ", 0
 noTailString db "Рядок бех хвостових пробiлiв (string2): ", 0
 Crlf db 13, 10, 0
-enteredBytes dd ?
 maxLength dd 78
 string1 db 60 dup(0)
 string2 db 60 dup(0)
 
-.code ;секцiя коду програми
+; секцiя коду програми
+.code
 start:
 
-invoke StdOut, ADDR introString			;?нформац?я про розробника
-invoke StdOut, ADDR Crlf				;перех?д на новий рядок
-invoke StdOut, ADDR enterString			;"Введ?ть рядок:"
-invoke StdIn, ADDR string1, maxLength	;введення рядка користувачем
-;invoke PreparingProc, ADDR string1		;
-invoke CutTailSpaces, ADDR string1		;вилучення хвостових проб?л?в з рядка
-invoke CopyStrings, ADDR string1		;коп?ювання рядка
-invoke StdOut, ADDR noTailString		;"Рядок без хвостових проб?л?в:"
+invoke StdOut, ADDR introString			; iнформацiя про розробника
+invoke StdOut, ADDR Crlf				; перехiд на новий рядок
+invoke StdOut, ADDR enterString			; "Введiть рядок:"
+invoke StdIn, ADDR string1, maxLength	; введення рядка користувачем
+invoke CutTailSpaces, ADDR string1		; вилучення хвостових пробiлiв з рядка
+invoke CopyStrings, ADDR string1		; копiювання рядка
+invoke StdOut, ADDR noTailString		; "Рядок без хвостових пробiлiв:"
 inkey ADDR string2
 inkey "Натиснiть будь-яку кнопку для виходу з програми"
 invoke ExitProcess, 0
 
-;процедура CutTailSpaces - вилучення хвостових проб?л?в з введеного рядка
+; процедура CutTailSpaces - вилучення хвостових пробiлiв з введеного рядка
 CutTailSpaces PROC sz :DWORD
-	lea EBX, string1
-	mov byte ptr [EBX+EAX], 0
-	mov enteredBytes, EAX
-	mov ECX, enteredBytes
+	mov EBX, sz
+	mov byte ptr [EBX+EAX], 0	; нуль-байт у кiнець string1
+	mov ECX, EAX
+	; шукаємо останнiй непробiльний символ
 	JCXZ stop
 	@@:
 		cmp byte ptr [EBX], " "
 		jz m1
-		mov EDX, EBX ;сюди запишеться адреса останнього непроб?льного символу
+		mov EDX, EBX 	; сюди (EDX) запишеться адреса останнього непробiльного символу
 		m1: inc EBX
 	loopne @B
 	stop:
-	mov byte ptr [EDX+1], 0
+	mov byte ptr [EDX+1], 0		; вилучаємо хвостовi пробiли
 	ret
 CutTailSpaces endp
 
-;процедура CopyStrings - коп?ювання рядка без хвостових пробiлiв (string1) у новий (string2)
+; процедура CopyStrings - копiювання рядка без хвостових пробiлiв (string1) у новий (string2)
 CopyStrings PROC sz :DWORD
-	lea EBX, string1
-	sub EDX, EBX
-	mov ECX, EDX ;параметр циклу
+	mov EBX, sz
+	sub EDX, EBX	; вiдстань м?ж першим символом i останнiм непробiльним
+	mov ECX, EDX 	; параметр циклу
 	lea EDX, string2
-	mov byte ptr [EDX+ECX+1], 0
-	JCXZ stop1
+	mov byte ptr [EDX+ECX+1], 0		; нуль-байт у кiнець string2
+	; копiюємо символи зi string1 у string2
 	@@:
 		mov AH, [EBX+ECX]
 		mov byte ptr [EDX+ECX], AH
 		cmp ECX, 0
 		dec ECX
 		jnl @B
-	stop1:
 	ret
 CopyStrings endp
 
