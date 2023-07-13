@@ -5,4 +5,4 @@ In the process of development Assembler and MASM32 were used.
 
 Main purpose of TailSpacesRemover is to remove spaces from the end of entered line. And, that`s all.
 
-In order to run this application you have to compile ASM-file, so that EXE-file wil be created. And last step is to run EXE. 
+In order to run this application you just have to to run EXE-file. 
