@@ -1,8 +1,21 @@
-# SP_CourseProject_TailSpacesRemover
+# Tail Spaces Remover
+
+![alt text](https://github.com/BogdanVeligorskyi/SP_CourseProject_TailSpacesRemover/blob/main/screen_1.png?raw=true)
+
 Program part of course project from System Programming (Системне програмування) 
 
-In the process of development Assembler and MASM32 were used.
+## Features
 
-Main purpose of TailSpacesRemover is to remove spaces from the end of entered line. And, that`s all.
+Removing spaces from the end of entered line
 
-In order to run this application you just have to to run EXE-file. 
+## Available languages
+
+English-Ukrainian
+
+## Used technologies
+
+Assembler, MASM32 for Windows
+
+## How to run application
+
+In order to run this application you just have to to run the EXE-file. 
