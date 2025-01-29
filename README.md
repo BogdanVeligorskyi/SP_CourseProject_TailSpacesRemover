@@ -1,6 +1,6 @@
 # Tail Spaces Remover
 
-![alt text](https://github.com/BogdanVeligorskyi/SP_CourseProject_TailSpacesRemover/blob/main/screen_1.png?raw=true)
+![alt text](https://github.com/BogdanVeligorskyi/SP_CourseProject_TailSpacesRemover/blob/master/screen_1.png?raw=true)
 
 Program part of course project from System Programming (Системне програмування) 
 
